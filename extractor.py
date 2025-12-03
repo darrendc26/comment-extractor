@@ -213,11 +213,11 @@ def extract_pdf_comments(files: list):
     OUTPUT: CSV string
     """
     output = StringIO()
-    writer = csv.writer(output, delimiter=';')
+    writer = csv.writer(output, delimiter=',')
 
+    writer.writerow(["", "", "", "", "", "Supplier's Answers"])
     writer.writerow([
-        "Sr. No.", "Company", "Doc Number", "Revision",
-        "Page", "Author", "Comments", "Reply By", "Supplier Response"
+       "Document Number", "Revision", "Page", "LNT Comment", "Reply By", "Supplier Response"
     ])
 
     sr = 1
@@ -250,14 +250,16 @@ def extract_pdf_comments(files: list):
                     wrapped = wrap_text(cleaned, width=70)
                     wrapped_comment = pad_width(wrapped, min_width=120)                    
 
+                    if p <9: 
+                        page_no = f'\t0{p + 1} of {doc.page_count}'
+                    else:
+                        page_no = f'\t{p + 1} of {doc.page_count}'
+
                     writer.writerow([
-                        sr,
-                        company_code,
                         doc_number,
                         f'\t{rev}',
-                        p + 1,
-                        author,
-                        wrapped_comment,   # ← multi-line comment
+                        page_no,
+                        wrapped_comment,
                         "",
                         ""
                     ])
